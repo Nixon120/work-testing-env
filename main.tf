@@ -1,3 +1,4 @@
+/*
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
   id = var.vpc_id
@@ -106,7 +107,7 @@ resource "aws_instance" "mirth_application" {
 # Allocate an Elastic IP address
 resource "aws_eip" "mirth_eip" {
   vpc = true
-}
+} */
 
 # Associate the Elastic IP with the EC2 instance
 resource "aws_eip_association" "mirth_eip_assoc" {
