@@ -32,7 +32,7 @@ resource "aws_security_group" "mirth_security_group" {
 # Create a new key pair
 resource "aws_key_pair" "mirth_key" {
   key_name   = "mirth_key"  # Name of the new key pair
-  public_key = file("~/.ssh/id_rsa.pub")  # Path to the public key file
+  public_key = file("/home/nixon/.ssh/id_rsa.pub")  # Path to the public key file
 }
 
 # Create a new public subnet, specifying a valid availability zone
