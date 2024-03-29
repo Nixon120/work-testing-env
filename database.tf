@@ -1,3 +1,4 @@
+/*
 #Define data sources to retrieve subnet IDs dynamically
 data "aws_subnet" "private_subnet1" {
   vpc_id = var.vpc_id
@@ -65,7 +66,7 @@ resource "aws_db_instance" "prod-mirth-DBInstance" {
   username = jsondecode(data.aws_secretsmanager_secret_version.postgres_credentials.secret_string).username
   password = jsondecode(data.aws_secretsmanager_secret_version.postgres_credentials.secret_string).password
 
-}
+} */
 
 # Reference your existing security group
 data "aws_security_group" "existing_security_group" {
