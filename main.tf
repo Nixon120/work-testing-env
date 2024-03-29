@@ -1,4 +1,3 @@
-/*
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
   id = var.vpc_id
@@ -29,7 +28,6 @@ resource "aws_security_group" "mirth_security_group" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic (adjust for security)
   }
 }
-
 # Create a new key pair
 resource "aws_key_pair" "mirth_key" {
   key_name   = "mirth_key"  # Name of the new key pair
@@ -43,7 +41,6 @@ resource "tls_private_key" "mirth_key" {
   algorithm = "RSA"
   rsa_bits  = 4096  # You can adjust the key size as needed
 }
-
 # Create a new public subnet, specifying a valid availability zone
 resource "aws_subnet" "mirth_public_subnet" {
   availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
@@ -102,12 +99,24 @@ resource "aws_instance" "mirth_application" {
   tags = {
     Name = "Mirth-Application"
   }
+
+  # Run commands to install Mirth Connect on the EC2 instance
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "sudo apt install -y default-jre",
+      "curl -O https://s3.amazonaws.com/downloads.mirthcorp.com/connect/4.5.0.b3012/mirthconnect-4.5.0.b3012-unix.tar.gz",
+      "tar -xvzf mirthconnect-4.5.0.b3012-unix.tar.gz",
+      "sudo mv Mirth\\ Connect /opt/mirthconnect"
+    ]
+  }
 }
+
 
 # Allocate an Elastic IP address
 resource "aws_eip" "mirth_eip" {
   vpc = true
-} */
+}
 
 # Associate the Elastic IP with the EC2 instance
 resource "aws_eip_association" "mirth_eip_assoc" {
