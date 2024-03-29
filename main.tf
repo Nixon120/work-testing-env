@@ -100,18 +100,15 @@ resource "aws_instance" "mirth_application" {
     Name = "Mirth-Application"
   }
 
-  # Run commands to install Mirth Connect on the EC2 instance
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "sudo apt install -y default-jre",
-      "curl -O https://s3.amazonaws.com/downloads.mirthcorp.com/connect/4.5.0.b3012/mirthconnect-4.5.0.b3012-unix.tar.gz",
-      "tar -xvzf mirthconnect-4.5.0.b3012-unix.tar.gz",
-      "sudo mv Mirth\\ Connect /opt/mirthconnect"
-    ]
-  }
+  user_data = <<-EOF
+    #!/bin/bash
+    sudo apt update
+    sudo apt install -y default-jre
+    curl -O https://s3.amazonaws.com/downloads.mirthcorp.com/connect/4.5.0.b3012/mirthconnect-4.5.0.b3012-unix.tar.gz
+    tar -xvzf mirthconnect-4.5.0.b3012-unix.tar.gz
+    sudo mv Mirth\ Connect /opt/mirthconnect
+  EOF
 }
-
 
 # Allocate an Elastic IP address
 resource "aws_eip" "mirth_eip" {
