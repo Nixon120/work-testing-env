@@ -29,10 +29,23 @@ resource "aws_security_group" "mirth_security_group" {
   }
 }
 
+
+To create a new key pair in Terraform Cloud, you typically wouldn't reference a local public key file like you do when working with Terraform locally. Instead, you can generate a new key pair within the Terraform configuration itself. Here's how you can do it:
+
+terraform
+Copy code
 # Create a new key pair
 resource "aws_key_pair" "mirth_key" {
   key_name   = "mirth_key"  # Name of the new key pair
-  #public_key = file("/home/nixon/.ssh/id_rsa.pub")  # Path to the public key file
+
+  # Generate a new key pair using Terraform's built-in `tls` provider
+  public_key = tls_private_key.mirth_key.public_key_openssh
+}
+
+# Generate a new RSA private key
+resource "tls_private_key" "mirth_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096  # You can adjust the key size as needed
 }
 
 # Create a new public subnet, specifying a valid availability zone
