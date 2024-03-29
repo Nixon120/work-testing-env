@@ -72,3 +72,4 @@ resource "aws_db_instance" "prod-mirth-DBInstance" {
 data "aws_security_group" "existing_security_group" {
   name = "mirth_security_group"  # Replace with the actual name
 }
+*/
