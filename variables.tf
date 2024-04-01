@@ -21,3 +21,7 @@ variable "subnet_names" {
   type = list
   default = ["mirth-private1", "mirth-private2", "mirth-private3"]
    }
+variable "subnet_cidr_block" {
+  description = "CIDR block for the new subnet"
+  type        = string
+}  
