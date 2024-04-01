@@ -44,7 +44,7 @@ resource "tls_private_key" "mirth_key" {
 # Create a new public subnet, specifying a valid availability zone
 resource "aws_subnet" "mirth_public_subnet" {
   availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
-  cidr_block              = "10.0.0.32/28"
+  cidr_block              = var.subnet_cidr_block  # Using the subnet_cidr_block variable
   vpc_id                  = data.aws_vpc.existing_vpc.id
   map_public_ip_on_launch = true
 }
