@@ -1,4 +1,4 @@
-
+/*
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
   id = var.vpc_id
@@ -122,3 +122,4 @@ resource "aws_eip_association" "mirth_eip_assoc" {
   allocation_id = aws_eip.mirth_eip.id
 }
 
+*/
