@@ -94,7 +94,7 @@ resource "aws_instance" "mirth_application" {
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.mirth_security_group.id]
   subnet_id              = aws_subnet.mirth_public_subnet.id
-  key_name               = aws_key_pair.mirth_key.key_name  # Use the new key pair
+  key_name               = data.aws_key_pair.existing_key_pair.key_name  # Use the new key pair
    
   root_block_device {
     volume_size           = 200  # 150GB for the root volume
