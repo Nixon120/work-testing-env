@@ -44,18 +44,9 @@ resource "aws_security_group" "mirth_security_group" {
   }
 }
 # Create a new key pair
-resource "aws_key_pair" "mirth_key" {
+data "aws_key_pair" "existing_key_pair" {
   key_name   = "mirth_key"  # Name of the new key pair
 
-  # Generate a new key pair using Terraform's built-in `tls` provider
-  public_key = tls_private_key.mirth_key.public_key_openssh
-}
-
-# Generate a new RSA private key
-resource "tls_private_key" "mirth_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096  # You can adjust the key size as needed
-}
 # Create a new public subnet, specifying a valid availability zone
 resource "aws_subnet" "mirth_public_subnet" {
   availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
