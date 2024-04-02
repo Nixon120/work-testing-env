@@ -1,4 +1,4 @@
-/*
+
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
   id = var.vpc_id
@@ -49,7 +49,7 @@ data "aws_key_pair" "existing_key_pair" {
 }
 # Create a new public subnet, specifying a valid availability zone
 resource "aws_subnet" "mirth_public_subnet" {
-  availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
+  #availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
   cidr_block              = var.subnet_cidr_block  # Using the subnet_cidr_block variable
   vpc_id                  = data.aws_vpc.existing_vpc.id
   map_public_ip_on_launch = true
@@ -126,5 +126,5 @@ resource "aws_eip_association" "mirth_eip_assoc" {
   instance_id   = aws_instance.mirth_application.id
   allocation_id = aws_eip.mirth_eip.id
 }
-*/
+
 
