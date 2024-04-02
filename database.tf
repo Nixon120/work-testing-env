@@ -1,4 +1,4 @@
-/*
+
 #Define data sources to retrieve subnet IDs dynamically
 data "aws_subnet" "private_subnet1" {
   vpc_id = var.vpc_id
@@ -73,4 +73,4 @@ data "aws_security_group" "existing_security_group" {
   name = "mirth_security_group"  # Replace with the actual name
 }
 
-*/
+
