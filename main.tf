@@ -1,4 +1,4 @@
-/*
+
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
   id = var.vpc_id
@@ -9,7 +9,7 @@ resource "aws_internet_gateway" "mirth_igw" {
   vpc_id = data.aws_vpc.existing_vpc.id
 }
 
-# Create a security group allowing SSH access from anywhere
+# Create a security group allowing SSH, port 5432, and port 8443 access from anywhere
 resource "aws_security_group" "mirth_security_group" {
   name        = "mirth_security_group"
   description = "Security group for Mirth application instance"
@@ -19,7 +19,21 @@ resource "aws_security_group" "mirth_security_group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere (adjust for security)
+    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic on port 5432 from anywhere
+  }
+
+  ingress {
+    from_port   = 8443
+    to_port     = 8443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic on port 8443 from anywhere
   }
 
   egress {
@@ -122,4 +136,4 @@ resource "aws_eip_association" "mirth_eip_assoc" {
   allocation_id = aws_eip.mirth_eip.id
 }
 
-*/
+
