@@ -54,8 +54,8 @@ resource "aws_db_instance" "prod-mirth-DBInstance" {
   allocated_storage= 100
   identifier= "prod-mirth-db"
   engine= "postgres"
-  engine_version= "13.13"
-  instance_class= "db.m6i.4xlarge"
+  engine_version= "16.1"
+  instance_class= "db.m5d.large"
   db_subnet_group_name= aws_db_subnet_group.mirth_subnet_work_group.name  # Corrected reference
   publicly_accessible= false
   skip_final_snapshot= true
