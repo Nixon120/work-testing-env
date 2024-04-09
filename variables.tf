@@ -21,3 +21,8 @@ variable "subnet_cidr_block" {
   description = "CIDR block for the new subnet"
   type        = string
 }  
+
+variable "transit_gateway_id {
+   description = "ID of the transit gateway"
+   type        = string
+}
