@@ -1,4 +1,9 @@
-/*
+#
+# Copyright © 2024 Radiology Partners, Inc. - All Rights Reserved
+# Unauthorized copying of this file, via any medium is strictly prohibited
+# Proprietary and confidential
+#
+
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
   id = var.vpc_id
@@ -9,7 +14,7 @@ resource "aws_internet_gateway" "mirth_igw" {
   vpc_id = data.aws_vpc.existing_vpc.id
 }
 
-# Create a security group allowing SSH, port 5432, and port 8443 access from anywhere
+# Create a security group allowing SSH access from anywhere
 resource "aws_security_group" "mirth_security_group" {
   name        = "mirth_security_group"
   description = "Security group for Mirth application instance"
@@ -19,21 +24,7 @@ resource "aws_security_group" "mirth_security_group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere
-  }
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic on port 5432 from anywhere
-  }
-
-  ingress {
-    from_port   = 8443
-    to_port     = 8443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic on port 8443 from anywhere
+    cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere (adjust for security)
   }
 
   egress {
@@ -43,13 +34,13 @@ resource "aws_security_group" "mirth_security_group" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic (adjust for security)
   }
 }
-# Create a new key pair
+# Retrieve existing key pair
 data "aws_key_pair" "existing_key_pair" {
-  key_name   = "mirth_key"  # Name of the new key pair
+  key_name = "mirth_key"  # Name of the existing key pair
 }
 # Create a new public subnet, specifying a valid availability zone
 resource "aws_subnet" "mirth_public_subnet" {
-  #availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
+  availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
   cidr_block              = var.subnet_cidr_block  # Using the subnet_cidr_block variable
   vpc_id                  = data.aws_vpc.existing_vpc.id
   map_public_ip_on_launch = true
@@ -94,7 +85,7 @@ resource "aws_instance" "mirth_application" {
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.mirth_security_group.id]
   subnet_id              = aws_subnet.mirth_public_subnet.id
-  key_name               = data.aws_key_pair.existing_key_pair.key_name  # Use the new key pair
+  key_name               = data.aws_key_pair.existing_key_pair.key_name
    
   root_block_device {
     volume_size           = 200  # 150GB for the root volume
@@ -126,6 +117,3 @@ resource "aws_eip_association" "mirth_eip_assoc" {
   instance_id   = aws_instance.mirth_application.id
   allocation_id = aws_eip.mirth_eip.id
 }
-
-
-*/
