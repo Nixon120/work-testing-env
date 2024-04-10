@@ -22,7 +22,8 @@ variable "subnet_cidr_block" {
   type        = string
 }  
 
-variable "transit_gateway_id {
-   description = "ID of the transit gateway"
-   type        = string
+variable "transit_gateway_id" {
+  description = "The ID of the Transit Gateway to which the route is directed"
+  type        = string
 }
+
