@@ -1,8 +1,6 @@
-#
 # Copyright © 2024 Radiology Partners, Inc. - All Rights Reserved
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
-#
 
 # Retrieve information about the existing VPC using input variable
 data "aws_vpc" "existing_vpc" {
@@ -27,18 +25,42 @@ resource "aws_security_group" "mirth_security_group" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow SSH from anywhere (adjust for security)
   }
 
+  # Define ingress rules for additional ports
+  ingress {
+    from_port   = 4242
+    to_port     = 4246
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 8443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic (adjust for security)
+    cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic
   }
 }
+
 # Retrieve existing key pair
 data "aws_key_pair" "existing_key_pair" {
   key_name = "mirth_key"  # Name of the existing key pair
 }
-# Create a new public subnet, specifying a valid availability zone
+
+# Create a new public subnet
 resource "aws_subnet" "mirth_public_subnet" {
   availability_zone       = "us-east-1a"  # Replace with a valid zone in your region
   cidr_block              = var.subnet_cidr_block  # Using the subnet_cidr_block variable
@@ -46,13 +68,20 @@ resource "aws_subnet" "mirth_public_subnet" {
   map_public_ip_on_launch = true
 }
 
-# Create a route table for the public subnet with a route to the IGW
+# Create a route table for the public subnet
 resource "aws_route_table" "mirth_public_route_table" {
   vpc_id = data.aws_vpc.existing_vpc.id
 
+  # Route to the Internet Gateway for internet access
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.mirth_igw.id
+  }
+
+  # Route to the Transit Gateway for specific traffic
+  route {
+    cidr_block         = "10.218.96.0/23"
+    transit_gateway_id = var.transit_gateway_id  # Corrected to use transit_gateway_id
   }
 }
 
@@ -86,10 +115,10 @@ resource "aws_instance" "mirth_application" {
   vpc_security_group_ids = [aws_security_group.mirth_security_group.id]
   subnet_id              = aws_subnet.mirth_public_subnet.id
   key_name               = data.aws_key_pair.existing_key_pair.key_name
-   
+
   root_block_device {
-    volume_size           = 200  # 150GB for the root volume
-    volume_type           = "gp2"  # General Purpose SSD (gp2) volume type
+    volume_size           = 200
+    volume_type           = "gp2"
     delete_on_termination = false
   }
 
@@ -103,7 +132,7 @@ resource "aws_instance" "mirth_application" {
     sudo apt install -y default-jre
     curl -O https://s3.amazonaws.com/downloads.mirthcorp.com/connect/4.5.0.b3012/mirthconnect-4.5.0.b3012-unix.tar.gz
     tar -xvzf mirthconnect-4.5.0.b3012-unix.tar.gz
-    sudo mv Mirth\ Connect /opt/mirthconnect
+    sudo mv Mirth Connect /opt/mirthconnect
   EOF
 }
 
