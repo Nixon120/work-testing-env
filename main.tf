@@ -1,3 +1,4 @@
+/*
 # Copyright © 2024 Radiology Partners, Inc. - All Rights Reserved
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
@@ -146,3 +147,4 @@ resource "aws_eip_association" "mirth_eip_assoc" {
   instance_id   = aws_instance.mirth_application.id
   allocation_id = aws_eip.mirth_eip.id
 }
+*/
