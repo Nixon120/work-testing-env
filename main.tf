@@ -38,7 +38,7 @@ resource "aws_security_group" "mirth_security_group" {
     from_port   = 443
     to_port     = 8443
     protocol    = "tcp"
-    cidr_blocks = ["234.819.23.0/23","34.90.09.67/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
