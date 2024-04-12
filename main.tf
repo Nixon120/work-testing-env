@@ -1,4 +1,4 @@
-/*
+
 # Copyright © 2024 Radiology Partners, Inc. - All Rights Reserved
 # Unauthorized copying of this file, via any medium is strictly prohibited
 # Proprietary and confidential
@@ -38,7 +38,7 @@ resource "aws_security_group" "mirth_security_group" {
     from_port   = 443
     to_port     = 8443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["234.819.23.0/23","34.90.09.67/16"]
   }
 
   ingress {
@@ -148,4 +148,4 @@ resource "aws_eip_association" "mirth_eip_assoc" {
   allocation_id = aws_eip.mirth_eip.id
 }
 
-*/
+
